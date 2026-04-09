@@ -75,5 +75,13 @@ namespace TaskFlow.Api.Tests.Services
             Assert.That(result.Title, Is.EqualTo("Study NUnit"));
             Assert.That(result.Description, Is.EqualTo("Read about assertions"));
         }
+
+        [Test]
+        public void GetTaskById_ShouldReturnNull_WhenIdDoesNotExist()
+        {
+            var result = _service.GetTaskById(Guid.NewGuid());
+
+            Assert.That(result, Is.Null);
+        }
     }
 }
