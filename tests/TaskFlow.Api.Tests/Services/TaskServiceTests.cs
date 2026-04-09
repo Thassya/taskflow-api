@@ -49,5 +49,18 @@ namespace TaskFlow.Api.Tests.Services
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Count, Is.EqualTo(0));
         }   
+
+        [Test]
+        public void GetAllTasks_ShouldReturnAllCreatedTasks()
+        {
+            _service.CreateTask("Task 1", "Description 1");
+            _service.CreateTask("Task 2", "Description 2");
+
+            var result = _service.GetAllTasks();
+
+            Assert.That(result.Count, Is.EqualTo(2));
+            Assert.That(result.Any(t => t.Title == "Task 1"), Is.True);
+            Assert.That(result.Any(t => t.Title == "Task 2"), Is.True);
+        }
     }
 }
