@@ -80,5 +80,17 @@ namespace TaskFlow.Api.Services
 
             return existingTask;
         }
+
+        public void DeleteTask(Guid id)
+        {
+            var existingTask = _repository.GetById(id);
+
+            if (existingTask == null)
+            {
+                throw new ArgumentException("Task not found.");
+            }
+
+            _repository.Delete(id);
+        }
     }
 }

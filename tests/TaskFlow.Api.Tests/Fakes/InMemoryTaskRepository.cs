@@ -41,6 +41,12 @@ namespace TaskFlow.Api.Tests.Fakes
 
         public void Delete(Guid id)
         {
+            var existingTask = GetById(id);
+
+            if (existingTask != null)
+            {
+                _tasks.Remove(existingTask);
+            }
         }
     }
 }

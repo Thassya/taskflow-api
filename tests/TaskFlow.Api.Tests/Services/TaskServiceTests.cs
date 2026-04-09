@@ -138,5 +138,26 @@ namespace TaskFlow.Api.Tests.Services
 
             Assert.That(ex.Message, Is.EqualTo("Task not found."));
         }
+
+        [Test]
+        public void DeleteTask_ShouldRemoveTask_WhenTaskExists()
+        {
+            var createdTask = _service.CreateTask("Delete me", "This task will be removed");
+
+            _service.DeleteTask(createdTask.Id);
+
+            var result = _service.GetTaskById(createdTask.Id);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void DeleteTask_ShouldThrowException_WhenTaskDoesNotExist()
+        {
+            var ex = Assert.Throws<ArgumentException>(() =>
+                _service.DeleteTask(Guid.NewGuid()));
+
+            Assert.That(ex.Message, Is.EqualTo("Task not found."));
+        }
     }
 }
