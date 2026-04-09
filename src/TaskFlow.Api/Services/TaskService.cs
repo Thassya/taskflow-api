@@ -64,5 +64,21 @@ namespace TaskFlow.Api.Services
 
             return existingTask;
         }
+
+        public TaskItem CompleteTask(Guid id)
+        {
+            var existingTask = _repository.GetById(id);
+
+            if (existingTask == null)
+            {
+                throw new ArgumentException("Task not found.");
+            }
+
+            existingTask.IsCompleted = true;
+
+            _repository.Update(existingTask);
+
+            return existingTask;
+        }
     }
 }

@@ -117,5 +117,26 @@ namespace TaskFlow.Api.Tests.Services
 
             Assert.That(ex.Message, Is.EqualTo("Title is required."));
         }
+
+        [Test]
+        public void CompleteTask_ShouldMarkTaskAsCompleted_WhenTaskExists()
+        {
+            var createdTask = _service.CreateTask("Finish project", "Complete the TDD implementation");
+
+            var completedTask = _service.CompleteTask(createdTask.Id);
+
+            Assert.That(completedTask, Is.Not.Null);
+            Assert.That(completedTask.Id, Is.EqualTo(createdTask.Id));
+            Assert.That(completedTask.IsCompleted, Is.True);
+        }
+
+        [Test]
+        public void CompleteTask_ShouldThrowException_WhenTaskDoesNotExist()
+        {
+            var ex = Assert.Throws<ArgumentException>(() =>
+                _service.CompleteTask(Guid.NewGuid()));
+
+            Assert.That(ex.Message, Is.EqualTo("Task not found."));
+        }
     }
 }
