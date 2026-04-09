@@ -1,0 +1,12 @@
+bin/
+obj/
+.vscode/
+TestResults/
+*.user
+*.suo
+*.cache
+*.pdb
+*.mdb
+*.opendb
+*.log
+.env
