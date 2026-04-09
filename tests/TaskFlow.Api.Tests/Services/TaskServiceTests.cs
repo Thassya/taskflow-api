@@ -62,5 +62,18 @@ namespace TaskFlow.Api.Tests.Services
             Assert.That(result.Any(t => t.Title == "Task 1"), Is.True);
             Assert.That(result.Any(t => t.Title == "Task 2"), Is.True);
         }
+
+        [Test]
+        public void GetTaskById_ShouldReturnTask_WhenIdExists()
+        {
+            var createdTask = _service.CreateTask("Study NUnit", "Read about assertions");
+
+            var result = _service.GetTaskById(createdTask.Id);
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Id, Is.EqualTo(createdTask.Id));
+            Assert.That(result.Title, Is.EqualTo("Study NUnit"));
+            Assert.That(result.Description, Is.EqualTo("Read about assertions"));
+        }
     }
 }

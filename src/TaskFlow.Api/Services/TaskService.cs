@@ -37,5 +37,10 @@ namespace TaskFlow.Api.Services
         {
             return _repository.GetAll();
         }
+
+        public TaskItem GetTaskById(Guid id)
+        {
+            return _repository.GetById(id);
+        }
     }
 }
