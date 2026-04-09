@@ -1,0 +1,36 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using TaskFlow.Api.Domain;
+using TaskFlow.Api.Repositories;
+
+namespace TaskFlow.Api.Tests.Fakes
+{
+    public class InMemoryTaskRepository : ITaskRepository
+    {
+        private readonly List<TaskItem> _tasks = new List<TaskItem>();
+
+        public void Add(TaskItem task)
+        {
+            _tasks.Add(task);
+        }
+
+        public TaskItem GetById(Guid id)
+        {
+            return _tasks.FirstOrDefault(t => t.Id == id);
+        }
+
+        public IList<TaskItem> GetAll()
+        {
+            return _tasks.ToList();
+        }
+
+        public void Update(TaskItem task)
+        {
+        }
+
+        public void Delete(Guid id)
+        {
+        }
+    }
+}
