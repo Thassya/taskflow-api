@@ -27,6 +27,16 @@ namespace TaskFlow.Api.Tests.Fakes
 
         public void Update(TaskItem task)
         {
+            var existingTask = GetById(task.Id);
+
+            if (existingTask == null)
+            {
+                return;
+            }
+
+            existingTask.Title = task.Title;
+            existingTask.Description = task.Description;
+            existingTask.IsCompleted = task.IsCompleted;
         }
 
         public void Delete(Guid id)

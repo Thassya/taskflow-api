@@ -42,5 +42,27 @@ namespace TaskFlow.Api.Services
         {
             return _repository.GetById(id);
         }
+
+        public TaskItem UpdateTask(Guid id, string title, string description)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                throw new ArgumentException("Title is required.");
+            }
+
+            var existingTask = _repository.GetById(id);
+
+            if (existingTask == null)
+            {
+                throw new ArgumentException("Task not found.");
+            }
+
+            existingTask.Title = title;
+            existingTask.Description = description;
+
+            _repository.Update(existingTask);
+
+            return existingTask;
+        }
     }
 }

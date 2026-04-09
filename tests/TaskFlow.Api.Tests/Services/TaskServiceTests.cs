@@ -83,5 +83,39 @@ namespace TaskFlow.Api.Tests.Services
 
             Assert.That(result, Is.Null);
         }
+
+        [Test]
+        public void UpdateTask_ShouldUpdateTask_WhenTaskExists()
+        {
+            var createdTask = _service.CreateTask("Old Title", "Old Description");
+
+            var updatedTask = _service.UpdateTask(createdTask.Id, "New Title", "New Description");
+
+            Assert.That(updatedTask, Is.Not.Null);
+            Assert.That(updatedTask.Id, Is.EqualTo(createdTask.Id));
+            Assert.That(updatedTask.Title, Is.EqualTo("New Title"));
+            Assert.That(updatedTask.Description, Is.EqualTo("New Description"));
+            Assert.That(updatedTask.IsCompleted, Is.False);
+        }
+
+        [Test]
+        public void UpdateTask_ShouldThrowException_WhenTaskDoesNotExist()
+        {
+            var ex = Assert.Throws<ArgumentException>(() =>
+                _service.UpdateTask(Guid.NewGuid(), "New Title", "New Description"));
+
+            Assert.That(ex.Message, Is.EqualTo("Task not found."));
+        }
+
+        [Test]
+        public void UpdateTask_ShouldThrowException_WhenTitleIsEmpty()
+        {
+            var createdTask = _service.CreateTask("Valid Title", "Valid Description");
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+                _service.UpdateTask(createdTask.Id, "", "Updated Description"));
+
+            Assert.That(ex.Message, Is.EqualTo("Title is required."));
+        }
     }
 }
