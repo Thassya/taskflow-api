@@ -3,6 +3,7 @@ using NUnit.Framework;
 using TaskFlow.Api.Repositories;
 using TaskFlow.Api.Services;
 using TaskFlow.Api.Tests.Fakes;
+using System.Linq;
 
 namespace TaskFlow.Api.Tests.Services
 {
@@ -39,5 +40,14 @@ namespace TaskFlow.Api.Tests.Services
 
             Assert.That(ex.Message, Is.EqualTo("Title is required."));
         }
+
+        [Test]
+        public void GetAllTasks_ShouldReturnEmptyList_WhenThereAreNoTasks()
+        {
+            var result = _service.GetAllTasks();
+
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.Count, Is.EqualTo(0));
+        }   
     }
 }

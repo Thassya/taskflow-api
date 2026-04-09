@@ -32,5 +32,22 @@ namespace TaskFlow.Api.Services
 
             return task;
         }
+
+        public IList<TaskItem> GetAllTasks()
+        {
+            var task = new TaskItem
+            {
+                Id = Guid.NewGuid(),
+                Title = "Empty title",
+                Description = "test failure",
+                IsCompleted = false
+            };
+
+            var list = new List<TaskItem>();
+            list.Add(task);
+
+            return list;
+            //return _repository.GetAll();
+        }
     }
 }
