@@ -2,9 +2,9 @@ name: CI-CD Pipeline
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "master", "main", "develop" ]
   pull_request:
-    branches: [ "main", "develop" ]
+    branches: [ "mastermain", "develop" ]
 
 jobs:
   build-test:
@@ -31,7 +31,7 @@ jobs:
   docker:
     needs: build-test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
 
     steps:
       - name: Checkout repository
