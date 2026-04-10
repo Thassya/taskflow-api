@@ -8,6 +8,7 @@ on:
 env:
   AZURE_WEBAPP_NAME: TaskFlowWebApp
   ACR_NAME: taskflowcontainer
+  ACR_LOGIN_SERVER: taskflowcontainer-anecgbhfa8cyfgha.azurecr.io
   IMAGE_NAME: taskflowwebapp
   RESOURCE_GROUP: TaskFlow
 
@@ -28,19 +29,19 @@ jobs:
         run: az acr login --name $ACR_NAME
 
       - name: Build Docker image
-        run: docker build -t $ACR_NAME.azurecr.io/$IMAGE_NAME:${{ github.sha }} -t $ACR_NAME.azurecr.io/$IMAGE_NAME:latest .
+        run: docker build -t $ACR_LOGIN_SERVER/$IMAGE_NAME:${{ github.sha }} -t $ACR_LOGIN_SERVER/$IMAGE_NAME:latest .
 
       - name: Push Docker image
         run: |
-          docker push $ACR_NAME.azurecr.io/$IMAGE_NAME:${{ github.sha }}
-          docker push $ACR_NAME.azurecr.io/$IMAGE_NAME:latest
+          docker push $ACR_LOGIN_SERVER/$IMAGE_NAME:${{ github.sha }}
+          docker push $ACR_LOGIN_SERVER/$IMAGE_NAME:latest
 
       - name: Configure Web App container
         run: |
           az webapp config container set \
             --name $AZURE_WEBAPP_NAME \
             --resource-group $RESOURCE_GROUP \
-            --container-image-name $ACR_NAME.azurecr.io/$IMAGE_NAME:${{ github.sha }}
+            --container-image-name $ACR_LOGIN_SERVER/$IMAGE_NAME:${{ github.sha }}
 
       - name: Restart Web App
         run: az webapp restart \
