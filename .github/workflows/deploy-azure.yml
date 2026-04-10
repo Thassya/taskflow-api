@@ -44,6 +44,4 @@ jobs:
             --container-image-name $ACR_LOGIN_SERVER/$IMAGE_NAME:${{ github.sha }}
 
       - name: Restart Web App
-        run: az webapp restart \
-          --name $AZURE_WEBAPP_NAME \
-          --resource-group $RESOURCE_GROUP
+        run: az webapp restart --name $AZURE_WEBAPP_NAME --resource-group $RESOURCE_GROUP
