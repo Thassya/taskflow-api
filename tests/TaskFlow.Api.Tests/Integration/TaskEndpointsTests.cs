@@ -213,6 +213,36 @@ namespace TaskFlow.Api.Tests.Integration
             Assert.That(tasks.Select(t => t.Description), Is.EquivalentTo(new[] { "Description A", "Description B" }));
             Assert.That(tasks.All(t => t.IsCompleted == false), Is.True);
         }
+        
+        public async Task PutTask_ShouldPersistUpdatedValues()
+        {
+            var createResponse = await _client.PostAsJsonAsync("/tasks", new
+            {
+                Title = "Initial title",
+                Description = "Initial description"
+            });
+
+            var createdTask = await createResponse.Content.ReadFromJsonAsync<TaskResponse>(_jsonOptions);
+
+            var updateResponse = await _client.PutAsJsonAsync("/tasks/" + createdTask.Id, new
+            {
+                Title = "Updated title",
+                Description = "Updated description"
+            });
+
+            Assert.That(updateResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+            var getResponse = await _client.GetAsync("/tasks/" + createdTask.Id);
+            Assert.That(getResponse.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+            var updatedTask = await getResponse.Content.ReadFromJsonAsync<TaskResponse>(_jsonOptions);
+            Assert.That(updatedTask, Is.Not.Null);
+            Assert.That(updatedTask.Id, Is.EqualTo(createdTask.Id));
+            Assert.That(updatedTask.Title, Is.EqualTo("Updated title"));
+            Assert.That(updatedTask.Description, Is.EqualTo("Updated description"));
+            Assert.That(updatedTask.IsCompleted, Is.False);
+        }
+
         private class TaskResponse
         {
             public Guid Id { get; set; }
