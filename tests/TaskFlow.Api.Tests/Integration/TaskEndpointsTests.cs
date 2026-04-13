@@ -34,7 +34,7 @@ namespace TaskFlow.Api.Tests.Integration
         }
 
         [Test]
-        public async System.Threading.Tasks.Task PostTasks_ShouldCreateTask_WhenRequestIsValid()
+        public async Task PostTasks_ShouldCreateTask_WhenRequestIsValid()
         {
             var request = new
             {
@@ -56,7 +56,7 @@ namespace TaskFlow.Api.Tests.Integration
         }
 
         [Test]
-        public async System.Threading.Tasks.Task PostTasks_ShouldReturnBadRequest_WhenTitleIsEmpty()
+        public async Task PostTasks_ShouldReturnBadRequest_WhenTitleIsEmpty()
         {
             var request = new
             {
@@ -70,7 +70,7 @@ namespace TaskFlow.Api.Tests.Integration
         }
 
         [Test]
-        public async System.Threading.Tasks.Task GetTasks_ShouldReturnCreatedTasks()
+        public async Task GetTasks_ShouldReturnCreatedTasks()
         {
             await _client.PostAsJsonAsync("/tasks", new
             {
@@ -95,7 +95,7 @@ namespace TaskFlow.Api.Tests.Integration
         }
 
         [Test]
-        public async System.Threading.Tasks.Task GetTaskById_ShouldReturnTask_WhenIdExists()
+        public async Task GetTaskById_ShouldReturnTask_WhenIdExists()
         {
             var createResponse = await _client.PostAsJsonAsync("/tasks", new
             {
@@ -116,7 +116,7 @@ namespace TaskFlow.Api.Tests.Integration
         }
 
         [Test]
-        public async System.Threading.Tasks.Task GetTaskById_ShouldReturnNotFound_WhenIdDoesNotExist()
+        public async Task GetTaskById_ShouldReturnNotFound_WhenIdDoesNotExist()
         {
             var response = await _client.GetAsync("/tasks/" + Guid.NewGuid());
 
@@ -124,7 +124,7 @@ namespace TaskFlow.Api.Tests.Integration
         }
 
         [Test]
-        public async System.Threading.Tasks.Task PutTask_ShouldUpdateTask_WhenTaskExists()
+        public async Task PutTask_ShouldUpdateTask_WhenTaskExists()
         {
             var createResponse = await _client.PostAsJsonAsync("/tasks", new
             {
@@ -150,7 +150,7 @@ namespace TaskFlow.Api.Tests.Integration
         }
 
         [Test]
-        public async System.Threading.Tasks.Task PatchComplete_ShouldMarkTaskAsCompleted_WhenTaskExists()
+        public async Task PatchComplete_ShouldMarkTaskAsCompleted_WhenTaskExists()
         {
             var createResponse = await _client.PostAsJsonAsync("/tasks", new
             {
@@ -171,7 +171,7 @@ namespace TaskFlow.Api.Tests.Integration
         }
 
         [Test]
-        public async System.Threading.Tasks.Task DeleteTask_ShouldRemoveTask_WhenTaskExists()
+        public async Task DeleteTask_ShouldRemoveTask_WhenTaskExists()
         {
             var createResponse = await _client.PostAsJsonAsync("/tasks", new
             {
@@ -190,6 +190,29 @@ namespace TaskFlow.Api.Tests.Integration
             Assert.That(getResponse.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
 
+        public async Task GetTasks_ShouldReturnExactlyTheCreatedTasks()
+        {
+            await _client.PostAsJsonAsync("/tasks", new
+            {
+                Title = "Task A",
+                Description = "Description A"
+            });
+            await _client.PostAsJsonAsync("/tasks", new
+            {
+                Title = "Task B",
+                Description = "Description B"
+            });
+
+            var response = await _client.GetAsync("/tasks");
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+            var tasks = await response.Content.ReadFromJsonAsync<TaskResponse[]>(_jsonOptions);
+            Assert.That(tasks, Is.Not.Null);
+            Assert.That(tasks.Length, Is.EqualTo(2));
+            Assert.That(tasks.Select(t=> t.Title), Is.EquivalentTo(new[] { "Task A", "Task B" }));
+            Assert.That(tasks.Select(t => t.Description), Is.EquivalentTo(new[] { "Description A", "Description B" }));
+            Assert.That(tasks.All(t => t.IsCompleted == false), Is.True);
+        }
         private class TaskResponse
         {
             public Guid Id { get; set; }
