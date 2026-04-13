@@ -243,6 +243,18 @@ namespace TaskFlow.Api.Tests.Integration
             Assert.That(updatedTask.IsCompleted, Is.False);
         }
 
+        [Test]
+        public async Task PutTask_ShouldReturnNotFound_WhenTaskDoesNotExist()
+        {
+            var response = await _client.PutAsJsonAsync("/tasks/" + Guid.NewGuid(), new
+            {
+                Title = "New title",
+                Description = "New description"
+            });
+
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        }
+
         private class TaskResponse
         {
             public Guid Id { get; set; }
