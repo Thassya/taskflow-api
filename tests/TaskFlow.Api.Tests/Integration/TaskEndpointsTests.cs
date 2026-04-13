@@ -190,6 +190,7 @@ namespace TaskFlow.Api.Tests.Integration
             Assert.That(getResponse.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
 
+        [Test]
         public async Task GetTasks_ShouldReturnExactlyTheCreatedTasks()
         {
             await _client.PostAsJsonAsync("/tasks", new
@@ -214,6 +215,7 @@ namespace TaskFlow.Api.Tests.Integration
             Assert.That(tasks.All(t => t.IsCompleted == false), Is.True);
         }
         
+        [Test]
         public async Task PutTask_ShouldPersistUpdatedValues()
         {
             var createResponse = await _client.PostAsJsonAsync("/tasks", new
@@ -254,7 +256,9 @@ namespace TaskFlow.Api.Tests.Integration
 
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
-
+        
+        
+        
         private class TaskResponse
         {
             public Guid Id { get; set; }

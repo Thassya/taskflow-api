@@ -42,6 +42,15 @@ namespace TaskFlow.Api.Tests.Services
         }
 
         [Test]
+        public void CreateTask_ShouldThrowException_WhenTitleIsWhiteSpace()
+        {
+            var ex = Assert.Throws<ArgumentException>(() =>
+                _service.CreateTask("   ", "Invalid task"));
+
+            Assert.That(ex.Message, Is.EqualTo("Title is required."));
+        }
+        
+        [Test]
         public void GetAllTasks_ShouldReturnEmptyList_WhenThereAreNoTasks()
         {
             var result = _service.GetAllTasks();
