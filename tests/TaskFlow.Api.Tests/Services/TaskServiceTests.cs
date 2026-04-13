@@ -159,5 +159,20 @@ namespace TaskFlow.Api.Tests.Services
 
             Assert.That(ex.Message, Is.EqualTo("Task not found."));
         }
+
+        [Test]
+        public void DeleteTask_ShouldRemoveOnlyTheSpecifiedTask()
+        {
+            var task1 = _service.CreateTask("Task A", "Description A");
+            var task2 = _service.CreateTask("Task B", "Description B");
+
+            _service.DeleteTask(task1.Id);
+
+            var allTasks = _service.GetAllTasks();
+
+            Assert.That(allTasks.Count, Is.EqualTo(1));
+            Assert.That(allTasks[0].Id, Is.EqualTo(task2.Id));
+            Assert.That(_service.GetTaskById(task1.Id), Is.Null);
+        }
     }
 }
